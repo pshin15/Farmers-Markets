@@ -134,6 +134,12 @@
 
   }
   
+  #map { 
+    width: 400px;
+    height: 300px; 
+  }
+
+
   .subtitle {
     color: rgba(0, 0, 0, 0.8);
     margin: 0px;
