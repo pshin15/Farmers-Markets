@@ -43,7 +43,7 @@
     margin:0;
     padding:0;
     padding-bottom: 1.5rem;
-    color: #FFF
+    color: #000
   }
   
   form {
@@ -62,7 +62,7 @@
     display: flex;
     justify-content: space-evenly;
     align-items: start;
-    background-color: #636363;
+    background-color: #848484;
   }
 
   .bottom-container {
@@ -77,7 +77,7 @@
     align-items: center;
     background-color: #000000;
     justify-content: space-evenly;
-    color: #fff;
+    color: #000;
 }
 
   .header h1 {
