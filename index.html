@@ -20,38 +20,25 @@
 <body>
     <div class="wrapper">
         <header class="header">
-            <h1>Food Inspections in Maryland</h1>
+            <h1>Maryland Farmer's Markets</h1>
         </header>
 
-        <div class="top-container">
-                <div class="first_section">
-                    <h1>HOW'S THE QUALITY?</h1>
-                    Find out if your desired food establishment is in line with health codes.
-                </div>
-    
-                <div class="first_section">
-                    <h3>What type of food service facility?</h3>
-                    <form action="https://data.princegeorgescountymd.gov/resource/umjn-t2iz.json" 
-                        class="box main_form">
-                    <div>
-                        <label for="resto">Food Service Facility</label>
-                        <input type="text" id="resto" name="resto"/>
-                    </div>
-                        <button type="submit">Submit</button>
-                    </form>
-                </div>   
-        </div> 
-
-        <div class="bottom-container">
+        <div class="container">
             <div class="left_section">
-                <h2>Nearby Food Establishments</h2>
-                <div class="box">A list of local food establishments</div>
-                <div id="map"></div>
+                    <h3>Nearby Farmer's Markets</h3>
+                    <form action="https://data.princegeorgescountymd.gov/resource/sphi-rwax.json" 
+                        class="box markets">
+                        <div>
+                            <label for="resto">Type in your address below</label>
+                            <input type="text" id="resto" name="resto"/>
+                        </div>
+                            <button type="submit">Submit</button>
+                    </form>
             </div>
-        
+                        
             <div class="right_section">
-                <h3>Your Chosen Food Establishment</h3>
-                    Does/Does not pass health inspection compliance
+                <h2>Nearby Farmer's Markets</h2>
+                <div id="map"></div>
             </div>
         </div>
     </div>
