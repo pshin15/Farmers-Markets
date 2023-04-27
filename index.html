@@ -26,16 +26,19 @@
         <div class="container">
             <div class="left_section">
                     <h3>Nearby Farmer's Markets</h3>
-                    <form action="https://data.princegeorgescountymd.gov/resource/sphi-rwax.json" 
+                    <form 
+                        action="https://data.princegeorgescountymd.gov/resource/sphi-rwax.json" 
                         class="box markets">
                         <div>
-                            <label for="resto">Type in your address below</label>
-                            <input type="text" id="resto" name="resto"/>
+                            <label for="address">Type in your address below</label>
+                            <input type="text" id="address" name="address"/>
                         </div>
                             <button type="submit">Submit</button>
-                    </form>
-            </div>
-                        
+                    </form> 
+                    <ol class="box" id="markets_list">
+                        A list of local farmers markets
+                    </ol>           
+            </div>    
             <div class="right_section">
                 <h2>Nearby Farmer's Markets</h2>
                 <div id="map"></div>
