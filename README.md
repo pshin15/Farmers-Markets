@@ -1,3 +1,3 @@
-# Food-Inspections
+# Farmers-Markets
 
-This project will show a map of PG County, and the inspection scores of various food service facilities in the area. The goal is to help people to make better informed decisions when looking for a place to eat. 
+This project will allow a user to type in their address to find the nearest farmers markets. The goal is to help people to easily find nearby farmers markets. 
