@@ -23,6 +23,10 @@ function initMap() {
     maxZoom: 25,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
+
+  //var script = document.createElement('script');
+  //document.head.appendChild(script);
+  
   return map;
 }
 
@@ -38,6 +42,31 @@ function markerPlace(array, map) {
   });
 }
 */
+
+
+// finds the users current coordinates  
+/*                 
+function getCurrentLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(position => {
+      const latitude = position.coords.latitude; // where lat is stored
+      const longitude = position.coords.longitude; // where long is stored
+      console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+      
+        // Calculate the distance between two points
+      const marketLatLng = new google.maps.LatLng(38.98, -76.93); // replace with the coordinates from the dataset
+
+      const distance = google.maps.geometry.spherical.computeDistanceBetween(pointA, pointB);
+      console.log('Distance: ' + distance);
+    });
+  } else { 
+    console.log("Geolocation is not supported by this browser.");
+  }
+}
+function showPosition(position) {
+  x.innerHTML = "Latitude: " + position.coords.latitude + 
+  "<br>Longitude: " + position.coords.longitude;
+}*/
 
 
 
@@ -57,11 +86,40 @@ async function findMarket() {
     marketList = await response.json();  //object from json data
     console.table(marketList);    
     injectHTML(marketList);
+    //getCurrentLocation();
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+        const userLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        console.log(`${userLatLng}`);
+        
+        marketList.forEach(market => {
+          const marketLatLng = new google.maps.LatLng(market.latitude, market.longitude);
+          const distance = google.maps.geometry.spherical.computeDistanceBetween(userLatLng, marketLatLng);
+
+          market.distance = distance;
+        });
+
+        // 4. Sort list of farmers markets by distance
+        marketList.sort((a, b) => a.distance - b.distance);
+
+        // 5. Display sorted list of farmers markets
+        const target = document.querySelector('#markets_list');
+        target.innerHTML = '';
+        marketList.forEach((item) => {
+          const str = `<li>${item.market_name} (${item.distance.toFixed(2)} miles)</li>`;
+          target.innerHTML += str;
+        });
+      });
+
+      } else { 
+      console.log("Geolocation is not supported by this browser.");
+    }
   });
 }
 
-const map = initMap();
 
+const map = initMap();
 //markerPlace(marketList, map);
 
 
