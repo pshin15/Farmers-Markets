@@ -5,15 +5,30 @@ function getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
 }
 
-function injectHTML(list) {
+
+function injectHTML(list, distance) {
   console.log('fired injectHTML')
   const target = document.querySelector('#markets_list');
   target.innerHTML = '';
-  list.forEach((item) => {
-    const str = `<li>${item.market_name}</li>`;
+  /*
+  if (Array.isArray(list)) {
+    list.forEach((item) => {
+      const str = `<li>${item.market_name} (Distance: ${item} miles)</li>`;
+      target.innerHTML += str;
+    });
+  } else {
+    const str = `<li>Distance: ${data} miles</li>`;
+    target.innerHTML = str;
+  }
+  */
+
+  list.forEach((item, index) => {
+    const str = `<li>${item.market_name} (${item.marketdistancemiles} miles)</li>`;
     target.innerHTML += str
   })
+
 }
+
 
 
 /*
@@ -28,8 +43,6 @@ function haversine_distance(mk1, mk2) {
   return d;
 }
 */
-
-
 
 
 // finds the users current coordinates  
@@ -53,20 +66,25 @@ function calculateDistance(marketList) {
   marketList.forEach(market => {
     const marketLatLng = new google.maps.LatLng(market.location.latitude, market.location.longitude);
     marketdistance = google.maps.geometry.spherical.computeDistanceBetween(userLatLng, marketLatLng);
+    marketdistancemiles = marketdistance/1609.344
+    console.log(marketdistancemiles);
 
-    console.log(marketdistance);
   });
+
+  //injectHTML(marketdistance);
+
 /*
   // 4. Sort list of farmers markets by distance
   marketList.sort((a, b) => a.distance - b.distance);
-*/
+
   // 5. Display sorted list of farmers markets
   const target = document.querySelector('#markets_list');
   target.innerHTML = '';
-  marketList.forEach((item) => {
+  marketList.forEach((item, index) => {
     const str = `<li>${item.market_name} (${item.marketdistance} miles)</li>`;
     target.innerHTML += str;
   });
+  */
 };
 
 
@@ -111,6 +129,7 @@ async function findMarket() {
     marketList = await response.json();  //object from json data
     console.log(marketList);    
     injectHTML(marketList);
+
     getCurrentLocation();
 
     calculateDistance(marketList, userLatLng);
@@ -121,6 +140,7 @@ async function findMarket() {
 }
 
 const map = initMap();
+
 //markerPlace(marketList, map);
 
 
