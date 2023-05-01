@@ -15,24 +15,31 @@ function getCurrentLocation() {
 
 let userLatLng;
 
-function calculateDistance(marketList) {
+
+
+// calculates the distance between user coordinates and market coordinates
+function calculateDistance(list) {
   let marketdistance = [];
-  
-  marketList.forEach(market => {
-    const marketLatLng = new google.maps.LatLng(market.location.latitude, market.location.longitude);
-    marketdistance = google.maps.geometry.spherical.computeDistanceBetween(userLatLng, marketLatLng);
-    marketdistancemiles = marketdistance/1609.344
-    console.log(marketdistancemiles);
+  // loops through each market
+  list.forEach(market => {
+    const marketLatLng = {latitude: market.location.latitude, longitude: market.location.longitude};
+
+    //const marketdistance = google.maps.geometry.spherical.computeDistanceBetween(userLatLng, marketLatLng);
+    //const marketdistancemiles = marketdistance/1609.344
+
+    //marketdistances.push({ market_name: market.market_name, distance: marketdistancemiles });
+    console.log(marketLatLng);
 
   });
+
 };
 
 
-
+// adds list of market names and their distances to the page
 function injectHTML(marketList) {
   console.log('fired injectHTML')
   const target = document.querySelector('#markets_list');
-  target.innerHTML = '';
+  target.innerHTML = "";
   /*
   if (Array.isArray(list)) {
     list.forEach((item) => {
@@ -44,11 +51,10 @@ function injectHTML(marketList) {
     target.innerHTML = str;
   }
   */
-  marketList.forEach((item, index) => {
+  marketList.forEach((item) => {
     const str = `<li>${item.market_name} (${item.marketdistancemiles} miles)</li>`;
     target.innerHTML += str
   })
-  
 }
 
 
