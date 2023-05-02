@@ -5,6 +5,7 @@ function getCurrentLocation() {
     navigator.geolocation.getCurrentPosition(position => {
       userLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
       console.log(`${userLatLng}`);
+      calculateDistance();
     });
   } else { 
     console.log("Geolocation is not supported by this browser.");
@@ -49,8 +50,6 @@ handlePermission();
 
 let userLatLng;
 
-
-
 // calculates the distance between user coordinates and market coordinates
 function calculateDistance(list) {
   let marketdistance = [];
@@ -58,7 +57,7 @@ function calculateDistance(list) {
   list.forEach(market => {
     const marketLatLng = {latitude: market.location.latitude, longitude: market.location.longitude};
 
-    //const marketdistance = google.maps.geometry.spherical.computeDistanceBetween(userLatLng, marketLatLng);
+    //const distance = google.maps.geometry.spherical.computeDistanceBetween(userLatLng, marketLatLng);
     //const marketdistancemiles = marketdistance/1609.344
 
     //marketdistances.push({ market_name: market.market_name, distance: marketdistancemiles });
@@ -131,16 +130,16 @@ async function findMarket() {
     const response = await fetch(
       'https://data.princegeorgescountymd.gov/resource/sphi-rwax.json'); 
     marketList = await response.json();  //object from json data
-    console.log(marketList);    
+    console.log(marketList);  
+    
+    calculateDistance(marketList);
+  
     injectHTML(marketList);
 
     getCurrentLocation();
 
-    calculateDistance(marketList, userLatLng);
   });
-
   //filter.addEventListener()
-  
 }
 
 const map = initMap();
