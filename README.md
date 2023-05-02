@@ -1,3 +1,5 @@
 # Farmers-Markets
 
-This project will allow a user to type in their address to find the nearest farmers markets. The goal is to help people to easily find nearby farmers markets. 
+This website will allow a user to type in their address to find the nearest farmers markets, sorted based on distance to the user.
+
+View the website [here](https://pshin15.github.io/Farmers-Markets/).
