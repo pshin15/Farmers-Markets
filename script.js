@@ -13,6 +13,40 @@ function getCurrentLocation() {
 
 
 
+// callback to get permission from the user to get their location, https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API/Using_the_Permissions_API#accessing_the_permissions_api
+var geoBtn = document.querySelector('.enable');
+
+function handlePermission() {
+  navigator.permissions.query({ name: "geolocation" }).then((result) => {
+    if (result.state === "granted") {
+      report(result.state);
+      geoBtn.style.display = "none";
+    } else if (result.state === "prompt") {
+      report(result.state);
+      geoBtn.style.display = "none";
+      navigator.geolocation.getCurrentPosition(
+        revealPosition,
+        positionDenied,
+        geoSettings
+      );
+    } else if (result.state === "denied") {
+      report(result.state);
+      geoBtn.style.display = "inline";
+    }
+    result.addEventListener("change", () => {
+      report(result.state);
+    });
+  });
+}
+
+function report(state) {
+  console.log(`Permission ${state}`);
+}
+
+handlePermission();
+
+
+
 let userLatLng;
 
 
