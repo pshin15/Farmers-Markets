@@ -1,11 +1,11 @@
 
 // finds the users current coordinates  
-function getCurrentLocation() {
+function getCurrentLocation(marketList) {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(position => {
       userLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
       console.log(`${userLatLng}`);
-      calculateDistance();
+      calculateDistance(marketList);
     });
   } else { 
     console.log("Geolocation is not supported by this browser.");
@@ -51,10 +51,10 @@ handlePermission();
 let userLatLng;
 
 // calculates the distance between user coordinates and market coordinates
-function calculateDistance(list) {
-  let marketdistance = [];
+function calculateDistance(marketList) {
+  //let marketdistance = [];
   // loops through each market
-  list.forEach(market => {
+  marketList.forEach(market => {
     const marketLatLng = {latitude: market.location.latitude, longitude: market.location.longitude};
 
     //const distance = google.maps.geometry.spherical.computeDistanceBetween(userLatLng, marketLatLng);
@@ -102,16 +102,16 @@ function initMap() {
 }
 
 /*
-function markerPlace(array, map) {
-  //console.log('array for markers', array);
-  array.forEach((item) => {
-    const {latitude, longitude} = item.location;
-    //L.marker([38.78, -77.01]).addTo(map);
-    L.marker([latitude, longitude]).addTo(map);
+function markerPlace(marketList, map) {
+  marketList.forEach((item) => {
+    const marketLatLng = {latitude: item.location.latitude, longitude: item.location.longitude};
+    L.marker(marketLatLng).addTo(map);
 
     //marker.bindPopup(`<h3>${item.market_name}</h3><p>${item.location_address}</p>`);
   });
 }
+    //const {latitude, longitude} = item.location;
+    //L.marker([38.78, -77.01]).addTo(map);
 */
 
 
@@ -133,10 +133,9 @@ async function findMarket() {
     console.log(marketList);  
     
     calculateDistance(marketList);
-  
     injectHTML(marketList);
-
     getCurrentLocation();
+    //markerPlace(marketList, map);
 
   });
   //filter.addEventListener()
@@ -144,7 +143,6 @@ async function findMarket() {
 
 const map = initMap();
 
-//markerPlace(marketList, map);
 
 
 document.addEventListener('DOMContentLoaded', async () => findMarket());
