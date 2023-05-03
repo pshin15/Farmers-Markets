@@ -55,10 +55,13 @@ handlePermission();
 
 let userLatLng;
 
+let marketlistdistance = [];
+
 // calculates the distance between user coordinates and market coordinates
 async function calculateDistance(marketList) {
   const userLocation = await getCurrentLocation();
-  console.log("CurrentPos", `${userloc}`);
+
+  console.log("CurrentPosition", `${userloc}`);
   console.log("MarketList", marketList);
 
   marketList = marketList.map(market => {
@@ -67,15 +70,28 @@ async function calculateDistance(marketList) {
     const marketLatLng = new google.maps.LatLng(latitude, longitude);
     const distanceMeters = google.maps.geometry.spherical.computeDistanceBetween(userLocation, marketLatLng);
     const distanceMiles = distanceMeters / 1609.344;
-    console.log("distance", distanceMiles)
-
+    //console.log("distance", distanceMiles)
+    marketlistdistance.push([distanceMiles, market])
     return { ...market, distance: (distanceMiles).toFixed(2) };
   });
-
+  console.log(marketlistdistance);
   console.log("Updated Market List", marketList);
 
   injectHTML(marketList);
 }
+
+
+// filters based on distance selected in dropdown
+function filterDistance() {
+  selectElement = document.querySelector('#market-distance');
+    console.log(selectElement);
+  selectElement.addEventListener('change', (event) => {
+    console.log(selectElement.value);
+
+  
+  })
+}
+
 
 
 // adds list of market names and their distances to the page
@@ -117,14 +133,16 @@ function markerPlace(marketList, map) {
 
 async function findMarket() {
   const allMarkets = document.querySelector('.markets');
+  //const filterButton = document.querySelector('.filter_button');
 
   let marketList = [];
+  filterDistance();
 
   allMarkets.addEventListener('submit', async (Submit) => {
     Submit.preventDefault();
     console.log('submitted form');
 
-    // 1. asynch data request
+    // asynch data request
     const response = await fetch(
       'https://data.princegeorgescountymd.gov/resource/sphi-rwax.json');
     marketList = await response.json();
@@ -134,6 +152,16 @@ async function findMarket() {
     //injectHTML(marketList);
     getCurrentLocation();
   });
+
+
+  /*
+  filterButton.addEventListener('click', (event) => {
+    console.log('clicked filter button');
+
+    const Data = new Data(markets);
+    const marketProps = Object.fromEntries(Data);
+  })
+  */
 }
 
 const map = initMap();
