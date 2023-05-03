@@ -1,15 +1,20 @@
 
-// finds the users current coordinates  
-function getCurrentLocation(marketList) {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(position => {
-      userLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-      console.log(`${userLatLng}`);
-      calculateDistance(marketList);
-    });
-  } else { 
-    console.log("Geolocation is not supported by this browser.");
-  }
+let userloc;
+
+// finds the users current coordinates
+async function getCurrentLocation(marketList) {
+  return new Promise((resolve, reject) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+        userloc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        console.log(`${userloc}`);
+        resolve(userloc);
+      });
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+      reject("Geolocation not supported");
+    }
+  });
 }
 
 
@@ -51,21 +56,26 @@ handlePermission();
 let userLatLng;
 
 // calculates the distance between user coordinates and market coordinates
-function calculateDistance(marketList) {
-  //let marketdistance = [];
-  // loops through each market
-  marketList.forEach(market => {
-    const marketLatLng = {latitude: market.location.latitude, longitude: market.location.longitude};
+async function calculateDistance(marketList) {
+  const userLocation = await getCurrentLocation();
+  console.log("CurrentPos", `${userloc}`);
+  console.log("MarketList", marketList);
 
-    //const distance = google.maps.geometry.spherical.computeDistanceBetween(userLatLng, marketLatLng);
-    //const marketdistancemiles = marketdistance/1609.344
+  marketList = marketList.map(market => {
+    const latitude = parseFloat(market.location.latitude);
+    const longitude = parseFloat(market.location.longitude);
+    const marketLatLng = new google.maps.LatLng(latitude, longitude);
+    const distanceMeters = google.maps.geometry.spherical.computeDistanceBetween(userLocation, marketLatLng);
+    const distanceMiles = distanceMeters / 1609.344;
+    console.log("distance", distanceMiles)
 
-    //marketdistances.push({ market_name: market.market_name, distance: marketdistancemiles });
-    console.log(marketLatLng);
-
+    return { ...market, distance: (distanceMiles).toFixed(2) };
   });
 
-};
+  console.log("Updated Market List", marketList);
+
+  injectHTML(marketList);
+}
 
 
 // adds list of market names and their distances to the page
@@ -73,19 +83,8 @@ function injectHTML(marketList) {
   console.log('fired injectHTML')
   const target = document.querySelector('#markets_list');
   target.innerHTML = "";
-  /*
-  if (Array.isArray(list)) {
-    list.forEach((item) => {
-      const str = `<li>${item.market_name} (${item.marketdistancemiles} miles away)</li>`;
-      target.innerHTML += str;
-    });
-  } else {
-    const str = `<li>Distance: ${data} miles</li>`;
-    target.innerHTML = str;
-  }
-  */
   marketList.forEach((item) => {
-    const str = `<li>${item.market_name} (${item.marketdistancemiles} miles)</li>`;
+    const str = `<li>${item.market_name} (${item.distance} miles)</li>`;
     target.innerHTML += str
   })
 }
@@ -117,28 +116,24 @@ function markerPlace(marketList, map) {
 
 
 async function findMarket() {
-  const allMarkets = document.querySelector('.markets'); 
-  //const filter = document.querySelector('.filter_button');
+  const allMarkets = document.querySelector('.markets');
 
   let marketList = [];
 
   allMarkets.addEventListener('submit', async (Submit) => {
     Submit.preventDefault();
-    console.log('submitted form'); 
+    console.log('submitted form');
 
-  // 1. asynch data request
+    // 1. asynch data request
     const response = await fetch(
-      'https://data.princegeorgescountymd.gov/resource/sphi-rwax.json'); 
-    marketList = await response.json();  //object from json data
-    console.log(marketList);  
-    
-    calculateDistance(marketList);
-    injectHTML(marketList);
-    getCurrentLocation();
-    //markerPlace(marketList, map);
+      'https://data.princegeorgescountymd.gov/resource/sphi-rwax.json');
+    marketList = await response.json();
+    console.log("CurrentMarker", marketList);
 
+    await calculateDistance(marketList);
+    //injectHTML(marketList);
+    getCurrentLocation();
   });
-  //filter.addEventListener()
 }
 
 const map = initMap();
