@@ -1,24 +1,3 @@
-
-let userloc;
-
-// finds the users current coordinates
-async function getCurrentLocation(marketList) {
-  return new Promise((resolve, reject) => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(position => {
-        userloc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-        console.log(`${userloc}`);
-        resolve(userloc);
-      });
-    } else {
-      console.log("Geolocation is not supported by this browser.");
-      reject("Geolocation not supported");
-    }
-  });
-}
-
-
-
 // callback to get permission from the user to get their location, https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API/Using_the_Permissions_API#accessing_the_permissions_api
 var geoBtn = document.querySelector('.enable');
 
@@ -52,44 +31,89 @@ function report(state) {
 handlePermission();
 
 
+// finds the users current coordinates
+async function getCurrentLocation() {
+  return new Promise((resolve, reject) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+        userloc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        //console.log('userloc', `${userloc}`);
+        resolve(userloc);
+      });
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+      reject("Geolocation not supported");
+    }
+  });
+}
 
-let userLatLng;
 
 let marketlistdistance = [];
+//let marketLatLng = [];
 
 // calculates the distance between user coordinates and market coordinates
-async function calculateDistance(marketList) {
+async function calculateDistance(marketList, map) {
   const userLocation = await getCurrentLocation();
 
-  console.log("CurrentPosition", `${userloc}`);
+  console.log("CurrentPosition", `${userLocation}`);
   console.log("MarketList", marketList);
 
   marketList = marketList.map(market => {
     const latitude = parseFloat(market.location.latitude);
     const longitude = parseFloat(market.location.longitude);
+
     const marketLatLng = new google.maps.LatLng(latitude, longitude);
+
     const distanceMeters = google.maps.geometry.spherical.computeDistanceBetween(userLocation, marketLatLng);
-    const distanceMiles = distanceMeters / 1609.344;
-    //console.log("distance", distanceMiles)
+    const distanceMiles = distanceMeters / 1609.344; // converted to miles
     marketlistdistance.push([distanceMiles, market])
-    return { ...market, distance: (distanceMiles).toFixed(2) };
+
+    console.log("distance", distanceMiles)
+
+    return { ...market, distance: (distanceMiles).toFixed(2)};
+
   });
-  console.log(marketlistdistance);
-  console.log("Updated Market List", marketList);
+  //console.log("marketlistdistance", marketlistdistance);
+  //console.log("Updated Market List", marketList);
 
   injectHTML(marketList);
+  markerPlace(marketList, map);
 }
 
+/* Look for where you're assigning the distance to the object containing the names of your farmers markets */ 
 
 // filters based on distance selected in dropdown
 function filterDistance() {
-  selectElement = document.querySelector('#market-distance');
-    console.log(selectElement);
+  const selectElement = document.querySelector('#market-distance');
+    //console.log(selectElement);
   selectElement.addEventListener('change', (event) => {
-    console.log(selectElement.value);
-
+    const dropdownOptions = parseFloat(selectElement.value);
+    console.log("dropdownOptions", dropdownOptions);
   
-  })
+  // Filter the marketList based on the dropdown option
+  const filteredMarketList = marketlistdistance.filter(([distance, market]) => {
+    if (dropdownOptions == 1) {
+      return distance <= 1;
+    } else if (dropdownOptions == 5) {
+      return distance <= 5;
+    } else if (dropdownOptions == 10) {
+      return distance <= 10;
+    } else if (dropdownOptions == 25) {
+      return distance <= 25;
+    } else {
+      return true; // return all markets if select 'Select' option
+    }
+  });
+
+  //const filteredMarkets = filteredMarketList.map(([distance, market]) => market);
+
+  const filteredMarkets = filteredMarketList.map(([distance, market]) => {
+    return {...market, distance};
+    });
+  console.log("filteredMarkets", filteredMarkets);
+  injectHTML(filteredMarkets);
+  });
+  // markerPlace(markers, map);
 }
 
 
@@ -108,7 +132,7 @@ function injectHTML(marketList) {
 
 
 function initMap() {
-  var map = L.map('map').setView([38.99, -76.94], 13);
+  const map = L.map('map').setView([38.99, -76.94], 13);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 25,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -116,55 +140,53 @@ function initMap() {
   return map;
 }
 
-/*
-function markerPlace(marketList, map) {
-  marketList.forEach((item) => {
-    const marketLatLng = {latitude: item.location.latitude, longitude: item.location.longitude};
-    L.marker(marketLatLng).addTo(map);
 
+
+function markerPlace(array, map) {
+  array.forEach((item) => {
+    const latitude = parseFloat(item.location.latitude);
+    const longitude = parseFloat(item.location.longitude);
+    const coordinates = {latitude, longitude}; // is this the right format?
+
+    console.log('markerPlace', coordinates);
+
+    L.marker([latitude, longitude]).addTo(map);
     //marker.bindPopup(`<h3>${item.market_name}</h3><p>${item.location_address}</p>`);
-  });
+  })
 }
-    //const {latitude, longitude} = item.location;
-    //L.marker([38.78, -77.01]).addTo(map);
-*/
 
 
 
 async function findMarket() {
   const allMarkets = document.querySelector('.markets');
-  //const filterButton = document.querySelector('.filter_button');
 
   let marketList = [];
   filterDistance();
 
-  allMarkets.addEventListener('submit', async (Submit) => {
+  const map = initMap();
+
+  allMarkets.addEventListener('click', async (Submit) => {
     Submit.preventDefault();
-    console.log('submitted form');
+    console.log('clicked view all');
 
     // asynch data request
     const response = await fetch(
       'https://data.princegeorgescountymd.gov/resource/sphi-rwax.json');
     marketList = await response.json();
-    console.log("CurrentMarker", marketList);
-
-    await calculateDistance(marketList);
-    //injectHTML(marketList);
+    //console.log("marketList", marketList);
     getCurrentLocation();
+    await calculateDistance(marketList, map);
   });
 
 
-  /*
-  filterButton.addEventListener('click', (event) => {
-    console.log('clicked filter button');
-
-    const Data = new Data(markets);
-    const marketProps = Object.fromEntries(Data);
+  const resetButton = document.querySelector('#reset_button');
+  resetButton.addEventListener('click', () => {
+    console.log('reset page');
+    location.reload();
   })
-  */
+  
 }
 
-const map = initMap();
 
 
 
