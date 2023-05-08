@@ -68,7 +68,8 @@ async function calculateDistance(marketList, map) {
     const distanceMiles = distanceMeters / 1609.344; // converted to miles
     marketlistdistance.push([distanceMiles, market])
 
-    console.log("distance", distanceMiles)
+    //console.log("distance", distanceMiles)
+    console.log("printed distances")
 
     return { ...market, distance: (distanceMiles).toFixed(2)};
 
@@ -108,7 +109,7 @@ function filterDistance() {
   //const filteredMarkets = filteredMarketList.map(([distance, market]) => market);
 
   const filteredMarkets = filteredMarketList.map(([distance, market]) => {
-    return {...market, distance};
+    return {...market, distance: (distance).toFixed(2)};
     });
   console.log("filteredMarkets", filteredMarkets);
   injectHTML(filteredMarkets);
@@ -157,10 +158,20 @@ function markerPlace(array, map) {
 
 
 
+// async function loadMarketData() {
+
+//   let marketList = [];
+
+//   const data = await fetch('https://data.princegeorgescountymd.gov/resource/sphi-rwax.json');
+//   marketList = await data.json();
+//   localStorage.setItem('marketList', JSON.stringify(marketList));
+// }
+
 async function findMarket() {
   const allMarkets = document.querySelector('.markets');
 
   let marketList = [];
+  //let currentList = []; //scoped to the main event function
   filterDistance();
 
   const map = initMap();
@@ -170,23 +181,23 @@ async function findMarket() {
     console.log('clicked view all');
 
     // asynch data request
-    const response = await fetch(
-      'https://data.princegeorgescountymd.gov/resource/sphi-rwax.json');
-    marketList = await response.json();
-    //console.log("marketList", marketList);
+    const data = await fetch('https://data.princegeorgescountymd.gov/resource/sphi-rwax.json');
+    marketList = await data.json();
+    localStorage.setItem('marketList', JSON.stringify(marketList));
+
+    const storedMarketList = localStorage.getItem('marketList');
+    marketList = JSON.parse(storedMarketList);
+
     getCurrentLocation();
     await calculateDistance(marketList, map);
   });
-
 
   const resetButton = document.querySelector('#reset_button');
   resetButton.addEventListener('click', () => {
     console.log('reset page');
     location.reload();
-  })
-  
+  });
 }
-
 
 
 
