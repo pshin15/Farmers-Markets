@@ -49,6 +49,27 @@
   form {
     accent-color: hsla(120, 100%, 50%, 0.482);
   }
+
+  .button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 25px;
+    text-align: center;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+  }
+
+  .filterbox {
+    background-color: #ffffff;
+    /* border: 2px solid; */
+    /* border-radius: 4px; */
+    width: fit-content;
+    /* height: fit-content; */
+    padding: 1rem;
+  }
   
   .wrapper {
     min-height: 100vh;
@@ -65,7 +86,6 @@
     background-color: #848484;
     padding-top: 2rem;
     padding-bottom: 2rem;
-
   }
 
   .container {
@@ -81,7 +101,7 @@
     background-color: #000000;
     justify-content: space-evenly;
     color: #000;
-}
+  }
 
   .header h1 {
     display: block;
@@ -99,7 +119,6 @@
     /* box-shadows are fancy */
     box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%), 0 0 0 1px rgb(10 10 10 / 2%);
   }
-  */
   
   .box {
     background-color: rgba(239, 239, 239, 0.40);
@@ -107,18 +126,10 @@
     border-radius: 4px;
     width: fit-content;
     height: fit-content;
-    padding: 1.5rem;
-    margin: 0 auto;
+    padding: 2rem;
+    /* margin: 3 auto; */
     flex-grow: 1;
   }
-  
-/*
-  .first_section {
-    display: inline-block;
-    padding-top: 5rem;
-    padding-bottom: 5rem;
-  }
-*/
 
   .left_section {
     display: inline-block;
@@ -139,7 +150,6 @@
     margin: 1rem;
     padding: 2rem;
     border-style: solid;
-
   }
   
   #map { 
@@ -202,17 +212,16 @@
   
   /* How To Write A Media Query For Small Screens */
   
-  @media only screen and (max-width: 736px){
+  @media only screen and (max-width: 550px){
       /* Rules in here will only apply when a screen is the correct size */
       /* check it out by using your developer tools to shrink your screen-size */
       .container {
-        background-color: #c7a1ac;
+        background-color: #ffffff;
         flex-direction: column;
         justify-content: center;
         align-items: center;
       }
       .box {
         width: 100%;
-        padding: 10;
       }
   }
