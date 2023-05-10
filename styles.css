@@ -154,32 +154,22 @@
   }
   
   
-  /* Deploy this with images as direct "children" and the images should pop into shape */
-  .grid {
-    display: flex;
-    justify-content: space-evenly;
-    flex-flow: wrap;
-    width: 350px;
-    height: 350px;
-    margin: 0 auto;
+  .footer {
+    flex-shrink: 0;
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.8);
+    font-size: 1rem;
+    font-weight: 600;
   }
   
-  .grid img {
-    width: 150px;
-    height: 150px;
+  .footer a {
+    color: rgb(100, 139, 119);
+    text-decoration: underline;
   }
-  
-  .prev,
-  .next {
-    border: none;
-    margin: 2px;
-    text-align: center;
-    border-radius: 5px;
-    font-weight: bold;
-    height: 45px;
-    padding: 10px;
-    line-height: 0; /* This centers a button's text! */
-    border: 2px solid rgb(99,99,99); /* shorthand for how to do a border */
+
+  .footer a:hover {
+    color: rgb(249, 255, 180);
+    text-decoration: none;
   }
 
   /*
