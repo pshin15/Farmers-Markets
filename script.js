@@ -147,7 +147,7 @@ function markerPlace(array, map) {
   array.forEach((item) => {
     const latitude = parseFloat(item.location.latitude);
     const longitude = parseFloat(item.location.longitude);
-    const coordinates = {latitude, longitude}; // is this the right format?
+    const coordinates = {latitude, longitude}; 
 
     console.log('markerPlace', coordinates);
 
@@ -156,16 +156,6 @@ function markerPlace(array, map) {
   })
 }
 
-
-
-// async function loadMarketData() {
-
-//   let marketList = [];
-
-//   const data = await fetch('https://data.princegeorgescountymd.gov/resource/sphi-rwax.json');
-//   marketList = await data.json();
-//   localStorage.setItem('marketList', JSON.stringify(marketList));
-// }
 
 async function findMarket() {
   const allMarkets = document.querySelector('.markets');
