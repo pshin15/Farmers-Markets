@@ -1,9 +1,10 @@
 # Farmers-Markets
-
+https://pshin15.github.io/Farmers-Markets/
 This website will allow a user to type in their address to find the nearest farmers markets, sorted based on distance to the user.
 
 View the website [here](https://pshin15.github.io/Farmers-Markets/).
 
+Target browsers of our project are commonly used desktop browsers (Chrome, Safari, Firefox).
 I used the list of Farmers markets in Prince George's County API: https://data.princegeorgescountymd.gov/resource/sphi-rwax.json.
 What visualisations does your project drive?
 This project uses the Leaflet Javascript library.
