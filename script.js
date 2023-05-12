@@ -1,3 +1,8 @@
+(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+  key: "AIzaSyAZpd--PTRIENjwVx91jEX2Tk9IjaJtuJE",
+  v: "weekly",
+});
+
 // callback to get permission from the user to get their location, https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API/Using_the_Permissions_API#accessing_the_permissions_api
 var geoBtn = document.querySelector('.enable');
 
@@ -114,7 +119,6 @@ function filterDistance() {
   console.log("filteredMarkets", filteredMarkets);
   injectHTML(filteredMarkets);
   });
-  // markerPlace(markers, map);
 }
 
 
@@ -144,6 +148,12 @@ function initMap() {
 
 
 function markerPlace(array, map) {
+  map.eachLayer((layer) => {
+    if (layer instanceof L.Marker) {
+      layer.remove();
+    }
+  });
+
   array.forEach((item) => {
     const latitude = parseFloat(item.location.latitude);
     const longitude = parseFloat(item.location.longitude);
@@ -151,8 +161,7 @@ function markerPlace(array, map) {
 
     console.log('markerPlace', coordinates);
 
-    L.marker([latitude, longitude]).addTo(map);
-    //marker.bindPopup(`<h3>${item.market_name}</h3><p>${item.location_address}</p>`);
+    L.marker([latitude, longitude]).addTo(map).bindPopup(title=item.market_name);
   })
 }
 
@@ -170,13 +179,14 @@ async function findMarket() {
     Submit.preventDefault();
     console.log('clicked view all');
 
-    // asynch data request
     const data = await fetch('https://data.princegeorgescountymd.gov/resource/sphi-rwax.json');
     marketList = await data.json();
     localStorage.setItem('marketList', JSON.stringify(marketList));
 
     const storedMarketList = localStorage.getItem('marketList');
     marketList = JSON.parse(storedMarketList);
+
+    console.log("marketList", marketList);
 
     getCurrentLocation();
     await calculateDistance(marketList, map);
@@ -188,7 +198,5 @@ async function findMarket() {
     location.reload();
   });
 }
-
-
 
 document.addEventListener('DOMContentLoaded', async () => findMarket());
