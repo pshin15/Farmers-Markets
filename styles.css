@@ -42,37 +42,43 @@
     justify-content: space-between;
     padding: 1rem 5rem;
     background-color: #074333;
-    /* height: 80px; */
+    height: 80px;
   }
 
   header h1 {
     display: block;
-  
     color: rgb(255, 255, 255);
-  
     font-size: 1.5rem;
     padding: 1.25rem;
     margin:0; 
-    box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%), 0 0 0 1px rgb(10 10 10 / 2%);
   } 
-  
-  
-  h1, h2, h3 {
+
+  h1 {
+    margin:0;
+    padding:0;
+    padding: 1.5rem;
+    color: #FFFFFF;
+  }
+
+  h2, h3 {
     margin:0;
     padding:0;
     padding-bottom: 1.5rem;
-    color: #000
+    color: #000;
   }
+
+  h4 {
+    margin:0;
+    padding:0;
+    padding: 1.5rem;
+    color: #FFF;
+  }
+
   
   ul {
     display: flex;
     flex-direction: row;
   }
-/*   
-  li {
-    list-style-type: none;
-    margin-left: 3rem;
-  } */
 
   a {
     text-decoration: none;
@@ -94,27 +100,12 @@
     margin: 4px 2px;
     cursor: pointer;
   }
-
-  .filterbox {
-    background-color: #ffffff;
-    /* border: 2px solid; */
-    /* border-radius: 4px; */
-    width: fit-content;
-    /* height: fit-content; */
-    padding: 1rem;
-  }
   
   .wrapper {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     flex: 1;
-  }
-  
-  .column {
-    float: left;
-    width: 50%;
-    padding: 10px;
   }
 
   .container {
@@ -150,7 +141,7 @@
   }
   
   .right_section {
-    background-color: #496957;
+    background-color: #719d84;
     flex: 1 auto;
     margin: 1rem;
     padding: 2rem;
@@ -161,14 +152,6 @@
     height: 500px; 
   }
 
- 
-  .subtitle {
-    color: rgba(0, 0, 0, 0.8);
-    margin: 0px;
-    margin-bottom: 5px;
-  }
-  
-  
   .footer {
     flex-shrink: 0;
     padding: 1rem;
@@ -187,9 +170,29 @@
     text-decoration: none;
   }
 
-  /*
-  Form Styles
-  */
+  main {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    background-color: #074333;
+  }
+
+  p {
+    color: #FFFFFF;
+    font-size: 10px;
+  }
+  
+  .grid img {
+    display: flex;
+    justify-content: space-evenly;
+    flex-flow: wrap;
+    margin: 30;
+
+    width: 375px;
+    height: 250px;
+    flex-direction: column;
+  }  
   
   form input {
       /* This is a hack to make sure our boxes line up with one another nicely */
@@ -217,9 +220,7 @@
   
   /* How To Write A Media Query For Small Screens */
   
-  @media only screen and (max-width: 550px){
-      /* Rules in here will only apply when a screen is the correct size */
-      /* check it out by using your developer tools to shrink your screen-size */
+  @media only screen and (max-width: 700px){
       .container {
         background-color: #ffffff;
         flex-direction: column;
@@ -229,4 +230,10 @@
       .box {
         width: 100%;
       }
+      .grid img {
+        width: 400px;
+        height: 300px;
+        flex-direction: row;
+      }  
+    
   }
